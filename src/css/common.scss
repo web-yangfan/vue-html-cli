@@ -1,0 +1,42 @@
+html, body, div {
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #34495e;
+}
+.header {
+  display: flex;
+  padding: 0 50px;
+  height: 50px;
+  box-shadow: 0 0 1px rgba(0,0,0,0.25);
+  .logo {
+    margin-top: 6px;
+    width: 40px;
+    height: 40px;
+  }
+  nav {
+    line-height: 50px;
+    margin-left: 100px;
+    a {
+      margin-right: 20px;
+      text-decoration: none;
+    }
+    .active {
+      color: #42b983;
+    }
+  }
+}
+
+.footer {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  box-shadow: 0 0 1px rgba(0,0,0,0.25);
+}
+
+.content-warp {
+  margin: 0 auto;
+  width: 1000px;
+  height: 400px;
+}

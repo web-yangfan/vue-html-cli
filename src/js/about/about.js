@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import App from './about.vue'
+import myHeader from '../component/my-header'
+import myFooter from '../component/my-footer'
+import '../../css/common.scss'
 
-let log = () => {
-  console.log('about')
-}
+Vue.component(myHeader.name, myHeader)
+Vue.component(myFooter.name, myFooter)
 
-log()
 new Vue({
   el: '#about',
   render: h => h(App)

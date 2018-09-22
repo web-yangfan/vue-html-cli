@@ -1,19 +1,20 @@
 <template>
-    <div>
-        <h1>首页</h1>
-        <h2>内容</h2>
-        <h3>列表</h3>
-        <img src="../../img/2.jpg" alt="">
-    </div>
+    <div class="wrap">
+      <my-header active="index"></my-header>
+      <div class="content-warp">
+        <h1>我是首页</h1>
+        <img src="../../img/logo.png" alt="">
+      </div>
+      <my-footer></my-footer>
+</div>
 </template>
 
 <script>
-  require('../../css/index/module-1.scss')
-  import '../../css/index/module-2.css'
   export default {
     name: 'home',
     data() {
-      return {};
+      return {
+      };
     },
     mounted() {},
     methods: {},
@@ -21,18 +22,16 @@
 </script>
 
 <style scoped lang="scss">
-    h1 {
-        color: red;
-    }
-    div {
-        img {
-            width: 100px;
-            height: 100px;
-            border: 1px solid red;
-        }
-        h2 {
-            color: aqua;
-        }
-    }
+  .content-warp {
+    text-align: center;
+  }
+  h1 {
+    color: #42b983;
+  }
+  img {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+  }
 </style>
 

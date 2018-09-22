@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <h1>关于我们</h1>
-        <h2>内容</h2>
-        <h3> 组件背景图片</h3>
+    <div class="wrap">
+        <my-header active="about"></my-header>
+        <div class="content-warp">
+            <h1>关于我们</h1>
+            <img src="../../img/logo.png" alt="">
+        </div>
+        <my-footer></my-footer>
     </div>
 </template>
 
@@ -10,7 +13,8 @@
   export default {
     name: 'about',
     data() {
-      return {};
+      return {
+      };
     },
     mounted() {},
     methods: {},
@@ -18,9 +22,16 @@
 </script>
 
 <style scoped lang="scss">
- div {
-     h3 {
-         background: url('../../img/3.jpg');
-     }
- }
+    .content-warp {
+        text-align: center;
+    }
+    h1 {
+        color: #42b983;
+    }
+    img {
+        width: 150px;
+        height: 150px;
+        display: inline-block;
+    }
 </style>
+

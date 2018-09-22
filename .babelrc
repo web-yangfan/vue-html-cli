@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "@babel/env"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-runtime" /* 如果报错 安装@babel/runtime */
+  ]
+}
