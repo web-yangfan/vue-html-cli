@@ -1,5 +1,5 @@
 module.exports = {
-  port: 5000,
+  port: 8000,
   // 配置webpack proxy
   proxy: {}
   
