@@ -1,25 +1,34 @@
 const path = require('path')
 const webpack = require('webpack')
 const utils = require('./utils')
+const config= require('./config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 let fileList = utils.getFileList()
 
+///path.resolve(config.paths.src, 'js')
 let baseConfg = {
   entry: fileList.entry,
   output: {
     filename: 'js/[name].js',
-    path: utils.resolve('dist'),
-    publicPath: '/'
+    path: config.paths.build,
+    publicPath: config.paths.root
   },
   module: {
     rules: [
       {
-        test: /\.js/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        include: path.resolve(config.paths.src, 'js'),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            // 创建缓存
+            cacheDirectory: path.resolve(config.paths.build, 'tmp')
+          }
+        }
       },
       {
         test: /\.vue$/,
