@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './about.vue'
 import myHeader from '../component/my-header'
 import myFooter from '../component/my-footer'
-import '../../css/common.scss'
+import '../../css/about.scss'
+
 
 Vue.component(myHeader.name, myHeader)
 Vue.component(myFooter.name, myFooter)

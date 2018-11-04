@@ -1,76 +1,194 @@
 const path = require('path')
 const fg = require('fast-glob')
+const config = require('./config')
 const packageConfig = require('../package.json')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
 exports.resolve = (dir) => {
   return path.join(__dirname, '..', dir)
 }
 
 
+
+exports.getCssLoader = (env) => {
+  return {
+    test: /\.css$/,
+    use: [
+      env == 'dev' ? 'css-hot-loader' : '',
+      MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          sourceMap: config[env].sourceMap
+        }
+      }
+    ]
+  }
+}
+
+exports.getScssLoader = (env) => {
+  return {
+    test: /\.scss$/,
+    use: [
+      env == 'dev' ? 'css-hot-loader' : '',
+      MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          sourceMap: config[env].sourceMap
+        }
+      },
+      {
+        // css添加前缀
+        loader: 'postcss-loader',
+        options: {
+          ident: 'postcss',
+          plugins:() => [
+            require('autoprefixer')( {"browsers": ["> 1%", "last 2 versions", "not ie <= 8"]} )
+          ]
+        }
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: config[env].sourceMap
+        }
+      }
+    ]
+  }
+}
+
+exports.getJsLoader = (env) => {
+  return {
+    test: /\.jsx?$/,
+    exclude: /node_modules/,
+    include: [path.resolve(config.paths.src, 'js')],
+    use: {
+      loader: 'babel-loader',
+      options: {
+        // 创建缓存
+        cacheDirectory: path.resolve(config.paths.build, 'tmp')
+      }
+    }
+  }
+}
+
+exports.getVueLoader = (env) => {
+  return {
+    test: /\.vue$/,
+    use: ['vue-loader']
+  }
+}
+
+exports.getImageLoader = (env) => {
+ return {
+   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+   loader: 'url-loader',
+   options: {
+     limit: 10000,
+     name: env == 'dev' ? 'static/img/[name].[ext]' : 'static/img/[name]-[hash:7].[ext]'
+   }
+ }
+}
+
+exports.getMediaLoader = (env) => {
+  return {
+    test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+    loader: 'url-loader',
+    options: {
+      limit: 10000,
+      name: env == 'dev' ? 'static/media/[name].[ext]' :  'static/media/[name]-[hash:7].[ext]'
+    }
+  }
+}
+
+exports.getFontsLoader = (env) => {
+  return {
+    test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+    loader: 'url-loader',
+    options: {
+      limit: 10000,
+      name: env == 'dev' ? 'static/fonts/[name].[ext]' : 'static/fonts/[name].[chunkhash].[ext]'
+    }
+  }
+}
+
+
+
+
+
+
 /*
 * 遍历 src目录
 * 遍历目录是 src/js下子目录的所有js文件，返回一个数组，数组里是遍历的js文件绝对路径
+* 文件命名：只返回 字母开头，不包含：字母、数字、_、-、"以外"符号文件
 * 最后返回下面格式的数据
   {
-    entry:{ about: './src/js/about/about.js', index: './src/js/index/index.js' },
-    htmlWebpack: { about: './src/about.html', index: './src/index.html' }
+    about: './src/js/about/about.js',
+    index: './src/js/index/index.js'
   }
 * */
-exports.getFileList = () => {
-  let result = {
-    entry: {},
-    htmlWebpack: {}
-  }
+exports.getEntries = (dirSrc, extensions) => {
+  let result = {}
+  let validExt = extensions || ['.js']
   
-  // 定义正则，过滤路径，让其符合entry 配置规则
-  let rootPath = path.join(__dirname, '..')
-  let jsReg = new RegExp(`^${rootPath}`,'gi')
+  fg.sync([dirSrc + '/**/*' + validExt]).map((filePath) => {
+    
+    const extension = path.extname(filePath)  // 获取文件类型后缀
+    const basename = path.basename(filePath, validExt) // 获取基本名称，不带文件类型后缀
   
-  fg.sync([exports.resolve('src/js/*/*.js')]).map((val) => {
-    let filePath = val.replace(jsReg, '.')
-    let newArr = val.split('/')
-    let jsName = newArr[newArr.length - 1].replace(/.js$/gi, '')
-    result.entry[jsName] = filePath
-    result.htmlWebpack[jsName] = `./src/${jsName}.html`
+    // 判断后缀名是否匹配
+    if (extension != validExt) return false
+    
+    // 以下划线开头的不匹配
+    if (basename[0] == '_') return false
+    
+    // 文件名必须: 字母开头，不能包含：字母、数字、_、-、"以外"的符号
+    if (!basename.match(/^[A-Za-z_0-9-]+$/)) return false
+    result[basename] = filePath
   })
   return result
 }
 
-/*
-* 循环HtmlWebpackPlugin，返回数组
-* */
-exports.getHtmlWebpackPluginArray = (list) => {
-  let arr = []
-  for (let page in list) {
+exports.getHtmlPluginConfig = (fileList, entrys) => {
+  let htmlPlugin = []
+  let noHtml = [] // 保存在entry建立入口文件（js），但是没有建立对应的html文件的文件名
+  for(let page in entrys) {
+    // 如果不存在，就跳过本次循环
+    if (!fileList[page]) {
+      noHtml.push(page)
+      continue
+    }
     let conf = {
       filename: `${page}.html`,
-      template: list[page], // 模板路径
+      // 模板路径
+      template: fileList[page].replace(/.js$/gi, '.html'),
       inject: true,
       /*
-      * excludeChunks 允许跳过某些chunks, 而chunks告诉插件要跳过entry里面的哪几个入口
-      * filter：将数据过滤，然后返回符合要求的数据，Object.keys是获取JSON对象中的每个key
-      * 如何更好的理解这块呢？举个例子：比如本demo中包含两个模块（index和about），最好的当然是各个模块引入自己入口js，下面例子
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: './src/index.html',
-        inject: true,
-        excludeChunks: ['about']
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'about.html',
-        template: './src/about.html',
-        inject: true,
-        excludeChunks: ['index']
-      })
-      * */
-      excludeChunks: Object.keys(list).filter(item => {
+        * excludeChunks 排除出自己外的所有模块
+        * 举个例子：比如本demo中包含两个模块（index和about），最好的当然是各个模块引入自己入口js，下面例子
+        new HtmlWebpackPlugin({
+          filename: 'index.html',
+          template: './src/index.html',
+          inject: true,
+          excludeChunks: ['about']
+        }),
+        new HtmlWebpackPlugin({
+          filename: 'about.html',
+          template: './src/about.html',
+          inject: true,
+          excludeChunks: ['index']
+        })
+        * */
+      excludeChunks: Object.keys(fileList).filter(item => {
         return (item != page)
       })
     }
-    arr.push(new HtmlWebpackPlugin(conf))
+    conf.excludeChunks = [...conf.excludeChunks, ...noHtml]
+    htmlPlugin.push(new HtmlWebpackPlugin(conf))
   }
-  return arr
+  return htmlPlugin
 }
 
 exports.createNotifierCallback = () => {
@@ -90,3 +208,4 @@ exports.createNotifierCallback = () => {
     })
   }
 }
+

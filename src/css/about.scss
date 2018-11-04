@@ -1,0 +1,19 @@
+@import "./common/_base.scss";
+@import "./common/_header.scss";
+@import "./common/_footer.scss";
+
+.content-warp {
+  margin: 0 auto;
+  width: 1000px;
+  height: 400px;
+  h1 {
+    padding: 20px 0;
+    color: #42b983;
+  }
+  img {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+  }
+
+}

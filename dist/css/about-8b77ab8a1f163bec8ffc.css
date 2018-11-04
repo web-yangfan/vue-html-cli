@@ -1,0 +1,132 @@
+
+.content-warp[data-v-cbede762] {
+  text-align: center;
+}
+h1[data-v-cbede762] {
+  color: #42b983;
+}
+img[data-v-cbede762] {
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@charset "UTF-8";
+/* CSS Document */
+html, body, div, span, object, iframe, h1, h2,
+h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn,
+em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd,
+ol, ul, li, fieldset, form, label, legend, table, caption, tbody,
+tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption,
+figure, footer, header, hgroup, menu, nav, section, summary, time, mark,
+audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: baseline;
+  background: transparent;
+  outline-style: none;
+  /*FF*/ }
+
+body {
+  line-height: 1; }
+
+a {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent; }
+
+a:hover, a:focus {
+  text-decoration: none;
+  bblr: expression(this.onFocus=this.blur());
+  /*IE*/
+  outline-style: none;
+  /*FF*/ }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+input, select {
+  vertical-align: middle; }
+
+/* css为clearfix，清除浮动 */
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  height: 0;
+  line-height: 0;
+  display: block;
+  visibility: hidden;
+  clear: both; }
+
+.clearfix:after {
+  clear: both; }
+
+.clearfix {
+  *zoom: 1;
+  /* IE/7/6 */ }
+
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 50px;
+  height: 50px;
+  -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0.25); }
+  .header .logo {
+    margin-top: 6px;
+    width: 40px;
+    height: 40px; }
+  .header nav {
+    line-height: 50px;
+    margin-left: 100px; }
+    .header nav a {
+      margin-right: 20px;
+      text-decoration: none; }
+    .header nav .active {
+      color: #42b983; }
+
+.footer {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0.25); }
+
+.content-warp {
+  margin: 0 auto;
+  width: 1000px;
+  height: 400px; }
+  .content-warp h1 {
+    padding: 20px 0;
+    color: #42b983; }
+  .content-warp img {
+    width: 150px;
+    height: 150px;
+    display: inline-block; }
+

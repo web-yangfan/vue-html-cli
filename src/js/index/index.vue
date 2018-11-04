@@ -5,6 +5,14 @@
         <h1>我是首页</h1>
         <img src="../../img/logo.png" alt="">
       </div>
+      
+      <p>
+        <img src="../../img/index/1.jpg" alt="">
+      </p>
+      <div class="item2">1</div>
+      <div class="item3">2</div>
+      <div class="item4">3</div>
+      <div class="item5">4</div>
       <my-footer></my-footer>
 </div>
 </template>
